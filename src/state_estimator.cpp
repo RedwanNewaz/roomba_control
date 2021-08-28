@@ -4,8 +4,8 @@
 
 #include "roomba_control/state_estimator.h"
 
-state_estimator::state_estimator(const string &world_frame, const string &robot_frame, int update_fq):
-world_frame_(world_frame), robot_frame_(robot_frame)
+state_estimator::state_estimator(const string &world_frame, const string &robot_frame, int update_fq, ros::NodeHandle& nh):
+world_frame_(world_frame), robot_frame_(robot_frame), nh_(nh)
 {
     // initialize state
     state_.resize(STATE_DIM);
@@ -39,7 +39,7 @@ void state_estimator::update_timer_callback(const ros::TimerEvent &event) {
         state_[1] = transformStamped.transform.translation.y;
         state_[2] = q.getAngle();
 
-        ROS_INFO_STREAM("x " << state_[0] << " y " << state_[1] << " theta " << state_[2]);
+//        ROS_INFO_STREAM("x " << state_[0] << " y " << state_[1] << " theta " << state_[2]);
     }
     catch (tf2::TransformException &ex) {
 //        ROS_WARN("%s",ex.what());

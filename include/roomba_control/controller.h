@@ -19,7 +19,7 @@ enum CONTROLLER_STATE{
 
 class controller {
 public:
-    controller(shared_ptr<state_estimator> localization, int control_fq);
+    controller(shared_ptr<state_estimator> localization, int control_fq, ros::NodeHandle& nh);
     virtual ~controller();
 
 private:
