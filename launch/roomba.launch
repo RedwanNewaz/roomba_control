@@ -1,0 +1,18 @@
+<launch>
+    <node pkg="roomba_control" type="roomba_control_node" name="roomba_control" output="screen">
+        <param name="world_frame" value="map"/>
+        <param name="robot_frame" value="tag21" />
+        <param name="state_update_fq" value="30" />
+
+        <param name="position_controller/kp" value="1.0" />
+        <param name="position_controller/kd" value="0.00" />
+        <param name="position_controller/ki" value="0.0" />
+
+        <param name="orientation_controller/kp" value="1.0" />
+        <param name="orientation_controller/kd" value="0.00" />
+        <param name="orientation_controller/ki" value="0.0" />
+
+        <param name="goal_tolerance" value="0.15"/>
+
+    </node>
+</launch>
