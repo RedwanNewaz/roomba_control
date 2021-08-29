@@ -10,6 +10,7 @@
 #include "pid.h"
 #include <numeric>
 #include <math.h>
+#include "display.h"
 
 enum CONTROLLER_STATE{
     IDLE,
@@ -29,6 +30,7 @@ private:
     ros::Subscriber rviz_goal_;
     ros::Publisher pub_;
     PID *position_controller_, *orientation_controller_;
+    display *viz_;
     CONTROLLER_STATE cntrl_state_;
     vector<double> goal_state_;
     double threshold_;
