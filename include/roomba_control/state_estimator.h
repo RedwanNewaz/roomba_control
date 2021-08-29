@@ -16,7 +16,7 @@ using namespace std;
 
 class state_estimator {
 public:
-    state_estimator(const string& world_frame, const string& robot_frame, int update_fq);
+    state_estimator(const string& world_frame, const string& robot_frame, int update_fq, ros::NodeHandle& nh);
     virtual ~state_estimator();
     vector<double> get_state();
 private:
