@@ -1,4 +1,4 @@
 <launch>
     <include file="$(find usb_cam)/launch/usb_cam-apriltag.launch" />
-    <include file="$(find apriltag_ros)/launch/continuous_detection2.launch" />
+    <include file="$(find apriltag_ros)/launch/continuous_detection.launch" />
 </launch>
