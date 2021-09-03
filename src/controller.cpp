@@ -40,8 +40,10 @@ localization_(localization), nh_(nh)
 
     // visualizer config
     string world_frame;
+    int robot_index;
+    nh_.getParam("robot_index", robot_index);
     nh_.getParam("world_frame", world_frame);
-    viz_ = new display(0, "roomba", world_frame);
+    viz_ = new display(robot_index, "roomba", world_frame);
 
 }
 
