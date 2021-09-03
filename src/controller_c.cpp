@@ -56,9 +56,8 @@ void controller::publish_control_cmd(const ros::TimerEvent &event) {
 
         R_state = sqrt(state[0]*state[0] + state[1]*state[1]);
         R_goal = sqrt(goal_state_[0]*goal_state_[0] + goal_state_[1]*goal_state_[1]);
-        
 
-        theta_goal = -fmod((atan2(goal_state_[1] - state[1], goal_state_[0] - state[0]) - M_PI/2),(2 * M_PI))  ;
+        theta_goal = atan2(goal_state_[1] - state[1], goal_state_[0] - state[0]);
         theta_state = state[2];
 
         cntrl_v = position_controller_->calculate(R_goal, R_state);
@@ -73,11 +72,10 @@ void controller::publish_control_cmd(const ros::TimerEvent &event) {
             cntrl_state_ = IDLE;
         }
         else{
-            ROS_INFO_STREAM("[Controller] x " << state[0] << " y " << state[1] << " theta " << theta_state << " theta_goal " << theta_goal);
+            ROS_INFO_STREAM("[Controller] x " << state[0] << " y " << state[1] << " theta " << state[2]);
             ROS_INFO("[Controller] (v = %lf, w = %lf)", cntrl_v, cntrl_w);
         }
     }
-    
 
     geometry_msgs::Twist msg;
     msg.linear.x = cntrl_v;

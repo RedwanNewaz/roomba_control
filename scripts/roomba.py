@@ -1,24 +1,20 @@
 #!/usr/bin/env python3
 import rospy
+from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist
 import pycreate2
 
-def callback(data):
+def callback(data,bot):
     rospy.loginfo(data)
     v,w = data.linear.x, data.angular.z
     R = 0.072
     L = 0.235
+    #while not rospy.is_shutdown():
     left,right = uniToDiff(v,w,L,R)
-    #left = scale(left)
-    left =left*100
-    right = right*100
-    #right = scale(right)
+    print ("left:",left, "right:",right)
+    bot.drive_direct(int(left), int(right))
 
-    #bot.drive_direct(int(left), int(right))
 
-def pushback (data)
-    ros.loginfo(data)
-    ## 
 
 def uniToDiff(v, w,length,radius):
     '''
@@ -38,23 +34,23 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     '''
-            Robot serial connection
-            '''
+    Robot serial connection
+    '''
     port = '/dev/ttyUSB0'
-    # port = "COM3"
     baud = {
-        'default': 115200,
-        'alt': 19200  # shouldn't need this unless you accidentally set it to this
-    }
+    'default': 115200,
+    'alt': 19200  # shouldn't need this unless you accidentally set it to this
+       }
 
     bot = pycreate2.Create2(port=port, baud=baud['default'])
     bot.start()
     bot.safe()
-    
+
     rospy.init_node('listener', anonymous=True)
 
-    rospy.Subscriber("cmd_vel", Twist, callback)
-
+    rospy.Subscriber("cmd_vel", Twist, callback,bot)
+    #rospy.Subscriber("/move_base_simple/goal", Twist, callback)
+    #rospy.Subscriber("/move_base_simple/goal", PoseStamped, callback,bot)
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
