@@ -72,7 +72,7 @@ void controller::publish_control_cmd(const ros::TimerEvent &event) {
             cntrl_state_ = IDLE;
         }
         else{
-            ROS_INFO_STREAM("[Controller] x " << state[0] << " y " << state[1] << " theta " << state[2]);
+            ROS_INFO_STREAM("[Controller] x " << state[0] << " y " << state[1] << " theta " << state[2] << " goal_theta " << theta_goal);
             ROS_INFO("[Controller] (v = %lf, w = %lf)", cntrl_v, cntrl_w);
         }
     }
@@ -93,7 +93,7 @@ controller::~controller() {
 }
 
 void controller::callback_rviz_goal(const geometry_msgs::PoseStamped::ConstPtr& msg) {
-    ROS_INFO_STREAM("[Controller] Recived RVIZ GOAL " << *msg);
+    ROS_INFO_STREAM("[Controller] Received RVIZ GOAL " << *msg);
     goal_state_[0] = msg->pose.position.x;
     goal_state_[1] = msg->pose.position.y;
 

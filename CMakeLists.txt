@@ -140,7 +140,7 @@ set(HEADER_FILES
         include/roomba_control/state_estimator.h
         include/roomba_control/pid.h
         include/roomba_control/controller.h
-        )
+        src/roomba_display_node.cpp)
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
@@ -148,6 +148,8 @@ set(HEADER_FILES
         ${SRC_FILES} ${HEADER_FILES}
 
          )
+
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
