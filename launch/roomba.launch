@@ -1,17 +1,19 @@
 <launch>
+    <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="1.8016262765799302 0.476380025606396 3.5009048290204388 0.8769811617928699 0.026170986256625006 -0.08956410206924383 0.47137818464510395 /usb_cam/image_raw world 100" />
+    
     <node pkg="roomba_control" type="roomba_control_node" name="roomba_control" output="screen">
-        <param name="world_frame" value="tag20"/>
+        <param name="world_frame" value="world"/>
         <param name="robot_frame" value="tag21" />
         <param name="state_update_fq" value="30" />
 
-        <param name="position_controller/kp" value="0.00" />
-        <param name="position_controller/kd" value="0.00" />
+        <param name="position_controller/kp" value="-2.00" />
+        <param name="position_controller/kd" value="-0.05" />
         <param name="position_controller/ki" value="0.00" />
         <param name="position_controller/minVal" value="-500" />
         <param name="position_controller/maxVal" value="500" />
 
-        <param name="orientation_controller/kp" value="-5.0" />
-        <param name="orientation_controller/kd" value="2.00" />
+        <param name="orientation_controller/kp" value="-15.0" />
+        <param name="orientation_controller/kd" value="-10.00" />
         <param name="orientation_controller/ki" value="0.00" />
         <param name="orientation_controller/minVal" value="-500" />
         <param name="orientation_controller/maxVal" value="500" />
@@ -19,7 +21,9 @@
         <param name="goal_tolerance" value="0.05"/>
         <param name="robot_index" value="1" />
     </node>
-
+    
     <node type="rviz" name="rviz" pkg="rviz" args="-d $(find roomba_control)/launch/roomba.rviz" />
    
 </launch>
+
+

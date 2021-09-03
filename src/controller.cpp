@@ -64,7 +64,9 @@ void controller::publish_control_cmd(const ros::TimerEvent &event) {
         R_state = state[0] * goal_state_[1];
         R_goal = state[1] * goal_state_[0];
         
-
+        if (R_state < R_goal)
+        	swap(R_state,R_goal);
+        
         theta_goal = -fmod((atan2(goal_state_[1] - state[1], goal_state_[0] - state[0]) - M_PI/2),(2 * M_PI))  ;
         theta_state = state[2];
 
@@ -80,7 +82,7 @@ void controller::publish_control_cmd(const ros::TimerEvent &event) {
             cntrl_state_ = IDLE;
         }
         else{
-            ROS_INFO_STREAM("[Controller] x " << state[0] << " y " << state[1] << " theta " << theta_state << " theta_goal " << theta_goal);
+            ROS_INFO_STREAM("[Controller] x " << R_state << " y " << R_goal << " theta " << theta_state << " theta_goal " << theta_goal);
             ROS_INFO("[Controller] (v = %lf, w = %lf)", cntrl_v, cntrl_w);
         }
     }
