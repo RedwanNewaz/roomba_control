@@ -53,9 +53,14 @@ void controller::publish_control_cmd(const ros::TimerEvent &event) {
     {
         vector<double> state = localization_->get_state();
         double R_state, R_goal, theta_state, theta_goal;
-
-        R_state = sqrt(state[0]*state[0] + state[1]*state[1]);
-        R_goal = sqrt(goal_state_[0]*goal_state_[0] + goal_state_[1]*goal_state_[1]);
+        // given the co-ordinates of a point P (robot) and line segment (goal location and origin ),
+        // and we have to determine the direction of point P from the line segment.
+        // That is whether the Point lies to the Right of Line Segment or to the Left of Line Segment.
+        // This Problem can be solved using cross-product of vector algebra
+        // Assume that our origin at (0, 0)
+        // https://www.geeksforgeeks.org/direction-point-line-segment/
+        R_state = state[0] * goal_state_[1];
+        R_goal = state[1] * goal_state_[0];
         
 
         theta_goal = -fmod((atan2(goal_state_[1] - state[1], goal_state_[0] - state[0]) - M_PI/2),(2 * M_PI))  ;

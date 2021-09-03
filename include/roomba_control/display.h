@@ -22,7 +22,7 @@ private:
     vector<double> goal_, robot_;
     int robot_index_;
     string robot_name_;
-    visualization_msgs::Marker points_;
+    visualization_msgs::Marker line_;
     ros::Publisher marker_pub_;
     ros::NodeHandle nh_;
 
