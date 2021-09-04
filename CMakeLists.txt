@@ -134,12 +134,13 @@ set(SRC_FILES
         src/state_estimator.cpp
         src/pid.cpp
         src/controller.cpp
-        src/display.cpp include/roomba_control/display.h)
+        src/display.cpp )
 
 set(HEADER_FILES
         include/roomba_control/state_estimator.h
         include/roomba_control/pid.h
         include/roomba_control/controller.h
+        include/roomba_control/display.h
         )
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context

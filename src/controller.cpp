@@ -9,16 +9,22 @@ localization_(localization), nh_(nh)
 {
     double update_time = 1.0 / (double) control_fq;
     control_loop_ = nh_.createTimer(ros::Duration(update_time), &controller::publish_control_cmd, this);
+
+
+
+
     double pos_kp, pos_kd, pos_ki, pos_min, pos_max;
+    nh_.getParam("position_controller/goal_tolerance", threshold_);
     nh_.getParam("position_controller/kp", pos_kp);
     nh_.getParam("position_controller/kd", pos_kd);
     nh_.getParam("position_controller/ki", pos_ki);
     nh_.getParam("position_controller/minVal", pos_min);
     nh_.getParam("position_controller/maxVal", pos_max);
 
-    position_controller_ = new PID(update_time, pos_max, pos_min, pos_kp, pos_kd, pos_ki);
+    position_controller_ = new PID(update_time, pos_max, pos_min, pos_kp, pos_kd, pos_ki, threshold_);
 
-    double ori_kp, ori_kd, ori_ki, ori_min, ori_max;
+    double ori_kp, ori_kd, ori_ki, ori_min, ori_max, thr;
+    nh_.getParam("orientation_controller/goal_tolerance", thr);
     nh_.getParam("orientation_controller/kp", ori_kp);
     nh_.getParam("orientation_controller/kd", ori_kd);
     nh_.getParam("orientation_controller/ki", ori_ki);
@@ -26,15 +32,17 @@ localization_(localization), nh_(nh)
     nh_.getParam("orientation_controller/minVal", ori_min);
     nh_.getParam("orientation_controller/maxVal", ori_max);
 
-    orientation_controller_ = new PID(update_time, ori_max, ori_min, ori_kp, ori_kd, ori_ki);
+    orientation_controller_ = new PID(update_time, ori_max, ori_min, ori_kp, ori_kd, ori_ki, thr);
 
-    nh_.getParam("goal_tolerance", threshold_);
+
 
 
     cntrl_state_ = IDLE;
-
-    pub_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 10);
-    rviz_goal_ = nh_.subscribe("/move_base_simple/goal", 1, &controller::callback_rviz_goal, this);
+    string goal_topic, control_topic;
+    nh_.getParam("control_topic_pub", control_topic);
+    nh_.getParam("goal_topic_sub", goal_topic);
+    pub_ = nh_.advertise<geometry_msgs::Twist>(control_topic, 10);
+    sub_goal_ = nh_.subscribe(goal_topic, 1, &controller::callback_rviz_goal, this);
     goal_state_.resize(2);
     goal_state_[0] = goal_state_[1] = 0;
 

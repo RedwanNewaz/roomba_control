@@ -47,11 +47,10 @@ def listener():
     bot.safe()
 
     rospy.init_node('listener', anonymous=True)
+    # http://wiki.ros.org/rospy/Overview/Parameter%20Server
+    control_topic = rospy.get_param('~control_topic_pub')
 
-    rospy.Subscriber("cmd_vel", Twist, callback,bot)
-    #rospy.Subscriber("/move_base_simple/goal", Twist, callback)
-    #rospy.Subscriber("/move_base_simple/goal", PoseStamped, callback,bot)
-    # spin() simply keeps python from exiting until this node is stopped
+    rospy.Subscriber(control_topic, Twist, callback,bot)
     rospy.spin()
 
 

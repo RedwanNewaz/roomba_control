@@ -27,7 +27,7 @@ private:
     shared_ptr<state_estimator> localization_;
     ros::Timer control_loop_;
     ros::NodeHandle nh_;
-    ros::Subscriber rviz_goal_;
+    ros::Subscriber sub_goal_;
     ros::Publisher pub_;
     PID *position_controller_, *orientation_controller_;
     display *viz_;

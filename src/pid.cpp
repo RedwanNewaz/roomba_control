@@ -1,5 +1,6 @@
 /**
- * Copyright 2019 Bradley J. Snyder <snyder.bradleyj@gmail.com>
+ * Copyright 2021 Redwan Newaz <redwan06me@gmail.com> and
+ * Bradley J. Snyder <snyder.bradleyj@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +33,7 @@ using namespace std;
 class PIDImpl
 {
     public:
-        PIDImpl( double dt, double max, double min, double Kp, double Kd, double Ki );
+        PIDImpl( double dt, double max, double min, double Kp, double Kd, double Ki, double goal_thr );
         ~PIDImpl();
         double calculate( double setpoint, double pv );
 
@@ -45,12 +46,16 @@ class PIDImpl
         double _Ki;
         double _pre_error;
         double _integral;
+        double _goal_thr;
+
+    protected:
+        double anti_windup(double u, double e, double thr);
 };
 
 
-PID::PID( double dt, double max, double min, double Kp, double Kd, double Ki )
+PID::PID( double dt, double max, double min, double Kp, double Kd, double Ki, double goal_thr )
 {
-    pimpl = new PIDImpl(dt,max,min,Kp,Kd,Ki);
+    pimpl = new PIDImpl(dt,max,min,Kp,Kd,Ki, goal_thr);
 }
 double PID::calculate( double setpoint, double pv )
 {
@@ -65,7 +70,7 @@ PID::~PID()
 /**
  * Implementation
  */
-PIDImpl::PIDImpl( double dt, double max, double min, double Kp, double Kd, double Ki ) :
+PIDImpl::PIDImpl( double dt, double max, double min, double Kp, double Kd, double Ki, double goal_thr ) :
     _dt(dt),
     _max(max),
     _min(min),
@@ -73,7 +78,8 @@ PIDImpl::PIDImpl( double dt, double max, double min, double Kp, double Kd, doubl
     _Kd(Kd),
     _Ki(Ki),
     _pre_error(0),
-    _integral(0)
+    _integral(0),
+    _goal_thr(goal_thr)
 {
 }
 
@@ -98,10 +104,7 @@ double PIDImpl::calculate( double setpoint, double pv )
     double output = Pout + Iout + Dout;
 
     // Restrict to max/min
-    if( output > _max )
-        output = _max;
-    else if( output < _min )
-        output = _min;
+    output = anti_windup(output, error, _goal_thr);
 
     // Save error to previous error
     _pre_error = error;
@@ -111,6 +114,49 @@ double PIDImpl::calculate( double setpoint, double pv )
 
 PIDImpl::~PIDImpl()
 {
+}
+
+double PIDImpl::anti_windup(double u, double e, double thr) {
+//    https://www.embeddedrelated.com/showcode/346.php
+/* Check for saturation.  In the event of saturation in any one direction,
+     inhibit saving the integrator if doing so would deepen the saturation. */
+    bool int_ok = true;
+
+    /* Positive saturation? */
+    if (u > _max)
+    {
+        /* Clamp the output */
+        u = _max;
+
+        /* Error is the same sign? Inhibit integration. */
+        if (e > 0)
+        {
+            int_ok = false;
+        }
+    }
+        /* Repeat for negative sign */
+    else if (u < _min)
+    {
+        u = _min;
+
+        if (e < 0)
+        {
+            int_ok = false;
+        }
+    }
+
+    /* Update the integrator if allowed. */
+    if (abs(e) < thr) // my modification: don't integrate error in goal region
+    {
+        _integral = 0;
+    }
+    else if (!int_ok)
+    {
+        _integral -= e * _dt;
+    }
+
+    return u;
+
 }
 
 #endif

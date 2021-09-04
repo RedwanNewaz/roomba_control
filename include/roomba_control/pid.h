@@ -1,5 +1,6 @@
 /**
- * Copyright 2019 Bradley J. Snyder <snyder.bradleyj@gmail.com>
+ * Copyright 2021 Redwan Newaz <redwan06me@gmail.com> and
+ * Bradley J. Snyder <snyder.bradleyj@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +34,8 @@ class PID
         // dt -  loop interval time
         // max - maximum value of manipulated variable
         // min - minimum value of manipulated variable
-        PID( double dt, double max, double min, double Kp, double Kd, double Ki );
+        // goal_thr - radius of circular goal region
+        PID( double dt, double max, double min, double Kp, double Kd, double Ki, double goal_thr);
 
         // Returns the manipulated variable given a setpoint and current process value
         double calculate( double setpoint, double pv );
