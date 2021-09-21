@@ -1,29 +1,34 @@
 # !/usr/bin/env python3
 import rospy
 from geometry_msgs.msg import PoseStamped
-import tf
+#import tf
 from functools import partial
 import tf2_ros
 
 
 # from move_base.move_base_msgs import MoveBaseActionResult
-
+rospy.init_node('goal_setter21', anonymous=True)
 def state_estimator_d(tagid):
-    world_frame = rospy.get_param('roomba_control/world_frame')
-
+    world_frame = rospy.get_param('/roomba21/roomba_control21/world_frame')
     print("fixed fram name:", world_frame)
-    tf_buffer = tf2_ros.Buffer(rospy.Duration(1200.0))  # tf buffer length
-    tf_listener = tf2_ros.TransformListener(tf_buffer)
-    trans = tf_buffer.lookup_transform(world_frame,
+    rate = rospy.Rate(1.0)
+    try:
+
+     tf_buffer = tf2_ros.Buffer(rospy.Duration(1200.0))  # tf buffer length
+     tf_listener = tf2_ros.TransformListener(tf_buffer)
+     trans = tf_buffer.lookup_transform(world_frame,
                                        tagid,  # source frame
                                        rospy.Time(0),  # get the tf at first available time
                                        rospy.Duration(1.0))
-    return trans
+    #print("trans",trans)
+     return trans
+    except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+     rate.sleep()
 
 
 def goal_setter(x, y, w):
     # rospy.init_node('goal_setter', anonymous=True)
-    pub = rospy.Publisher('move_base_simple/goal', PoseStamped, queue_size=10)
+    pub = rospy.Publisher('/roomba21/goal', PoseStamped, queue_size=10)
     # sub = rospy.Subscriber('move_base/result', MoveBaseActionResult, self.statusCB, queue_size=10)
     rate = rospy.Rate(30)  # 10hz
 

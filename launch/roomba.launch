@@ -1,5 +1,5 @@
 <launch>
-    <node pkg="tf" type="static_transform_publisher" name="world_coordinate" args="1.8016262765799302 0.476380025606396 3.5009048290204388 0.8769811617928699 0.026170986256625006 -0.08956410206924383 0.47137818464510395 /usb_cam/image_raw world 100" />
+    <node pkg="tf" type="static_transform_publisher" name="world_coordinate" args="2.0702797788352907 0.5784976352341031 3.8789791887589944 -0.017633649519061427 0.8761973380809723 -0.46235582375362383 -0.13488651298615822 /usb_cam/image_raw world 100" />
     <group ns="roomba21">
         <node pkg="roomba_control" type="roomba_control_node" name="roomba_control21" output="screen">
 
@@ -16,26 +16,23 @@
 
             <param name="orientation_controller/kp" value="-15.0" />
             <param name="orientation_controller/kd" value="-5.00" />
-            <param name="orientation_controller/ki" value="-0.5" />
+            <param name="orientation_controller/ki" value="0.0" />
             <param name="orientation_controller/minVal" value="-500" />
             <param name="orientation_controller/maxVal" value="500" />
             <param name="orientation_controller/goal_tolerance" value="0.01"/>
 
             <!-- change this setting for each robot-->
             <param name="robot_frame" value="tag21" />
-            <param name="control_topic_pub" value="/cmd_vel" />
-            <param name="goal_topic_sub" value="/move_base_simple/goal" />
+            <param name="control_topic_pub" value="/roomba21/cmd_vel" />
+            <param name="goal_topic_sub" value="/roomba21/goal" />
             <param name="robot_index" value="21" />
         </node>
 
         <node pkg="roomba_control" type="roomba.py" name="roomba_action" output="screen">
             <!-- control_topic_pub should be the same as the roomba_control_node -->
-            <param name="control_topic_pub" value="/cmd_vel"/>
+            <param name="control_topic_pub" value="roomba21/cmd_vel"/>
         </node>
     </group>
-
-    
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find roomba_control)/launch/roomba.rviz" />
    
 </launch>
 
